@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="copyright" content="© Pablo Augustin">
+	<meta name="author" content="Pablo Augustin">
+	<meta name="description" content="Calculadora de Imposto de Renda">
+
+    <title>Calculadora de Imposto de Renda</title>
+    
+</head>
+
+<body>
+
+    <section id="formulario">
+
+    <h1>Calculadora de Imposto de Renda</h1>
+
+        <form>
+
+            <label for="nome">Informe seu nome completo: </label>
+            <input type="text" id="nome"/>
+
+            <label for="dependentes">Número de dependentes: </label>
+            <input type="text" id="dependentes" placeholder="0"/>
+
+            <label for="salario">Informe o seu salário: </label>
+            <input type="text" id="salario" placeholder="0.00"/>
+
+            <label for="pensao">Valor da pensão alimentícia: </label>
+            <input type="text" id="pensao" placeholder="0.00"/>
+
+            <label for="descontos">Valor dos outros descontos: </label>
+            <input type="text" id="descontos" placeholder="0.00"/>
+
+            <input type="button" value="Consultar" id="consultar" onclick="Calculo()" >
+
+        </form>
+
+    </section>
+
+    <section id="dados">
+        
+        <div id="usuario" class="resultado"> <p>Usuário: </p> </div>
+
+        <div id="salario_liquido" class="resultado"> <p>Salário Liquido: R$ </p> </div>
+    
+        <div id="salario_bruto" class="resultado"> <p>Salário Bruto: R$ </p> </div>
+    
+        <div id="desconto_inss" class="resultado"> <p>Desconto INSS: R$ </p> </div>
+    
+        <div id="desconto_irrf" class="resultado"> <p>Desconto IRRF: R$ </p> </div>
+    
+        <div id="outros_descontos" class="resultado"> <p>Outros Descontos: R$ </p></div>
+       
+
+    </section>
+    
+</body>
+
+    <script>
+
+        function Calculo(){
+
+            var Nome= document.getElementById("nome")
+            var Dependentes= document.getElementById("dependentes")
+            var Salario= document.getElementById("salario")
+            var Pensao= document.getElementById("pensao")
+            var Descontos= document.getElementById("descontos")
+            var SalarioLiquido
+            var INSS
+            var IRRF
+
+            if (Salario.value < 1045.01)
+        {
+            INSS = (Salario.value * 0.075);
+        }
+        else if (Salario.value < 2089.61)
+        {
+            INSS = ((Salario.value - 1045)* 0.09 + 78.37);
+        }
+        else if (Salario.value < 3134.41)
+        {
+            INSS = ((Salario.value - 2089.60)* 0.12 + 78.37 + 94.01);
+        }
+        else  if (Salario.value < 6101.07)
+        {
+            INSS = ((Salario.value - 3134.40)* 0.14 + 78.37 + 94.01 + 125.37);
+        }
+        else if (Salario.value > 6101.06)
+        {
+            INSS = ((6101.06 - 3134.40)* 0.14 + 78.37 + 94.01 + 125.37);
+        }
+
+
+            var BCalculo = (Salario.value - INSS - Pensao.value - (Dependentes.value * 189.59));
+
+
+        if (BCalculo < 1903.99)
+        {
+            IRRF = 0;
+
+        }
+        else if (BCalculo < 2826.66)
+        {
+            IRRF = (BCalculo * 0.075 - 142.80);
+
+        }
+        else if (BCalculo < 3751.06)
+        {
+            IRRF = (BCalculo * 0.15 - 354.80);
+        }
+        else if (BCalculo < 4664.69)
+        {
+            IRRF = (BCalculo * 0.225 - 636.13);
+        }
+        else if (BCalculo > 4664.68)
+        {
+            IRRF = (BCalculo * 0.275 - 869.36);
+        }
+    
+            var DescontoIRRF = (IRRF).toFixed(2);
+            var SalarioLiquido = (Salario.value - INSS - DescontoIRRF - Descontos.value).toFixed(2)
+
+            var Usuario = document.getElementById("usuario").innerHTML = "Usuário: " + Nome.value;
+            var Sal = document.getElementById("salario_liquido").innerHTML = "Salário Liquido: R$ " + SalarioLiquido;
+            var Salb = document.getElementById("salario_bruto").innerHTML = "Salário Bruto: R$ " + Salario.value;
+            var DescontoINSS = document.getElementById("desconto_inss").innerHTML = "Desconto INSS: R$ " + INSS.toFixed(2);
+            var ValorIRRF = document.getElementById("desconto_irrf").innerHTML = "Desconto IRRF: R$ " + DescontoIRRF;
+            var OutrosDescontos = document.getElementById("outros_descontos").innerHTML = "Outros Descontos: R$ " + Descontos.value;
+    }
+
+    </script>
+
+    <!--Site de onde eu tirei a fonte sobre os percentuais das taxas e as deduções: https://www.contabilizei.com.br/contabilidade-online/desconto-inss/#:~:text=Qual%20a%20porcentagem%20de%20desconto%20do%20INSS%20sobre%20o%20sal%C3%A1rio%3F&text=1%C2%AA%20faixa%20salarial%3A%20R%24%201.045,%25%20%3D%20R%24%20125%2C38-->
+
+</html>
